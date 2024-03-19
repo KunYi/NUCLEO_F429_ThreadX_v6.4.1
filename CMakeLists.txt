@@ -61,6 +61,7 @@ set(SRC_FILES
   Core/Src/syscalls.c
   Core/Src/sysmem.c
   Core/Src/system_stm32f4xx.c
+  Core/Src/gcc_printf_port.c
   Core/Startup/startup_stm32f429zitx.s
   ${STM32F4_HAL_DRIVER}
 )
