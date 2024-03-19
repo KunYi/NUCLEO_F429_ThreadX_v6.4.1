@@ -9,16 +9,16 @@ set(EXECUTABLE ${PROJECT_NAME}.elf)
 set(LINKER_FILE ${CMAKE_SOURCE_DIR}/STM32F429ZITX_FLASH.ld)
 
 set(CMAKE_C_FLAGS_DEBUG
-  "${CMAKE_C_FLAGS_DEBUG} -O0 -ggdb"
+  "-O0 -ggdb"
   CACHE INTERNAL " C compiler flags")
 set(CMAKE_C_FLAGS_RELEASE
-  "${CMAKE_C_FLAGS_RELEASE} -O3"
+  "-O3"
   CACHE INTERNAL " C compiler flags")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO
-  "${CMAKE_C_FLAGS_RELWITHDEBINFO} -O3 -ggdb"
+  "-O3 -ggdb"
   CACHE INTERNAL " C compiler flags")
 set(CMAKE_C_FLAGS_MINSIZEREL
-  "${CMAKE_C_FLAGS_MINSIZEREL} -O3"
+  "-O3"
   CACHE INTERNAL " C compiler flags")
 
 
@@ -33,6 +33,8 @@ add_compile_options(
 
   -DUSE_HAL_DRIVER
   -DSTM32F429xx
+
+  -DTX_ENABLE_FPU_SUPPORT
   -Wall
 )
 
@@ -40,6 +42,14 @@ enable_language(C ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
+
+set(THREADX_ARCH cortex_m4)
+set(THREADX_TOOLCHAIN gnu)
+add_subdirectory(Thirdparty/threadx)
+
+set(THREADX_DIR
+  ${CMAKE_SOURCE_DIR}/Thirdparty/threadx/inc
+)
 
 set(STM32F4xx_DIR
   ${CMAKE_SOURCE_DIR}/Core/Inc
@@ -62,20 +72,24 @@ set(SRC_FILES
   Core/Src/sysmem.c
   Core/Src/system_stm32f4xx.c
   Core/Src/gcc_printf_port.c
+  Core/Src/tx_initialize_low_level.S
   Core/Startup/startup_stm32f429zitx.s
   ${STM32F4_HAL_DRIVER}
+  Core/Src/demo_threadx.c
 )
 
 # Build the executable based on the source files
 add_executable(${EXECUTABLE} ${SRC_FILES})
 
 target_link_libraries(${EXECUTABLE}
+  threadx
 )
 
 # List of includ directories
 target_include_directories(${EXECUTABLE} PRIVATE
   ${CMAKE_SOURCE_DIR}
   ${STM32F4xx_DIR}
+  ${THREADX_DIR}
 )
 
 # Compiler options
