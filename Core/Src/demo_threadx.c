@@ -62,6 +62,14 @@ CHAR    *pointer = TX_NULL;
 
     /* Create a byte memory pool from which to allocate the thread stacks.  */
     tx_byte_pool_create(&byte_pool_0, "byte pool 0", memory_area, DEMO_BYTE_POOL_SIZE);
+    /*
+     * Or use the below to allocate the memory pool by passing first_unused_memory
+     * which is _tx_initialize_unused_memory as a parameter to tx_byte_pool_create
+     */
+     /*
+     tx_byte_pool_create(&byte_pool_0, "byte pool 0", first_unused_memory, DEMO_BYTE_POOL_SIZE);
+     */
+
 
     /* Put system definition stuff in here, e.g. thread creates and other assorted
        create information.  */
